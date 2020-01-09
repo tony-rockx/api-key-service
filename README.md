@@ -58,5 +58,5 @@ $ node index.js
 To run in production mode:
 
 ```bash
-$ pm2 start address-whitelist/index.js --name "address-whitelist"
+$ pm2 start api-key-service/index.js --name "api-key-service"
 ```

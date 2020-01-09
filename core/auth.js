@@ -2,8 +2,14 @@ const crypto = require('crypto');
 
 require('dotenv').config()
 
+// const apiKey = process.env.APIKEY || "key";
+// const apiSecret = process.env.APISECRET || "secret";
 
 let isAuthorised = async function(req, res, next) {
+  // query api key service instead
+  // .env require path to find api key service
+
+  // comment out below once api key service is ready
   let data;
   if(req.method == "GET"){
     data = req.query;
@@ -62,7 +68,6 @@ let authDecryptCheck = async function(apiSecret, data) {
       let hash = await authGenerateHash(apiSecret, stringToSign)
       console.log("hash: " + hash)
 
-      console.log(hash, signature, userApiKey)
       let match = await checkSignatureAndHash(hash, signature, userApiKey)
       resolve(match)
     }else{

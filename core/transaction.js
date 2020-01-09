@@ -60,7 +60,7 @@ let addAccountToDB = async function(user, email, apiKeyPrefix, apiKeyPostfix, ap
 }
 
 
-let retrieveApiSecret = async function(apiKey, apiKeyHash) {
+let retrieveApiSecretAndUser = async function(apiKey, apiKeyHash) {
 
   var promise = new Promise(function(resolve, reject){
     let apiKeyPrefix = apiKey.substring(0, 5);
@@ -76,7 +76,8 @@ let retrieveApiSecret = async function(apiKey, apiKeyHash) {
 
         if(result[0]["api_key_hash"] == apiKeyHash){
           console.log(result[0]["api_secret"]);
-          resolve(result[0]["api_secret"]);
+          console.log(result[0]["user"]);
+          resolve([result[0]["api_secret"], result[0]["user"]]);
         }
 
     });
@@ -85,8 +86,9 @@ let retrieveApiSecret = async function(apiKey, apiKeyHash) {
 }
 
 
+
 exports.generateApiKey = generateApiKey;
 exports.generateApiSecret = generateApiSecret;
 exports.generateApiKeyHash = generateApiKeyHash;
 exports.addAccountToDB = addAccountToDB;
-exports.retrieveApiSecret = retrieveApiSecret;
+exports.retrieveApiSecretAndUser = retrieveApiSecretAndUser;

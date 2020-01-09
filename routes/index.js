@@ -30,16 +30,26 @@ router.post('/authorisation/', asyncHandler(async (req, res, next) => {
   var apiKey = req.body.api_key;
   var data = req.body;
 
-  let apiKeyHash = await tx.generateApiKeyHash(apiKey);
-  let apiSecret = await tx.retrieveApiSecret(apiKey, apiKeyHash);
+  console.log("data", data);
 
-  console.log(apiKeyHash, apiSecret);
+  let apiKeyHash = await tx.generateApiKeyHash(apiKey);
+
+  console.log("apiKeyHash", apiKeyHash);
+
+  let apiSecretAndUser = await tx.retrieveApiSecretAndUser(apiKey, apiKeyHash);
+  let apiSecret = apiSecretAndUser[0];
+  let apiUser = apiSecretAndUser[1];
+
+  console.log("apiSecret", apiSecret);
+  console.log("apiUser", apiUser);
 
   let access = await auth.authDecryptCheck(apiSecret, data);
+
   // use API secret to see if can get the same signature as that passed in
 
   return res.json({
-    "authorisation": access
+    "authorisation": access,
+    "user": apiUser
   });
 }));
 
