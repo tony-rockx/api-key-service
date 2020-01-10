@@ -74,10 +74,16 @@ let retrieveApiSecretAndUser = async function(apiKey, apiKeyHash) {
             resolve("fail");
         }
 
-        if(result[0]["api_key_hash"] == apiKeyHash){
-          console.log(result[0]["api_secret"]);
-          console.log(result[0]["user"]);
-          resolve([result[0]["api_secret"], result[0]["user"]]);
+        if(result.length > 0){
+          if(result[0]["api_key_hash"] == apiKeyHash){
+            console.log(result[0]["api_secret"]);
+            console.log(result[0]["user"]);
+            resolve([result[0]["api_secret"], result[0]["user"]]);
+          }else{
+            resolve("fail");
+          }
+        }else{
+          resolve("fail");
         }
 
     });

@@ -1,15 +1,14 @@
 const crypto = require('crypto');
+const axios = require('axios');
 
 require('dotenv').config()
 
-// const apiKey = process.env.APIKEY || "key";
-// const apiSecret = process.env.APISECRET || "secret";
+const apiKeyIP = process.env.APIKEY_IP || "http://localhost";
+const apiKeyPort = process.env.APIKEY_PORT || "3888";
 
 let isAuthorised = async function(req, res, next) {
-  // query api key service instead
-  // .env require path to find api key service
+  let url = apiKeyIP + ":" + apiKeyPort + '/authorisation';
 
-  // comment out below once api key service is ready
   let data;
   if(req.method == "GET"){
     data = req.query;
@@ -17,17 +16,22 @@ let isAuthorised = async function(req, res, next) {
     data = req.body;
   }
 
-  let access = await authDecryptCheck(apiSecret, data);
-  console.log("access", access);
+  console.log("data",data)
 
-  if (access == false) {
-    return res.json({
-      "status": 400,
-      'message': "Unauthorised access"
-    });
-  } else {
-    return next();
-  }
+  axios.post(url, data)
+  .then(async function (response) {
+    console.log("response", response["data"])
+    if(response["data"]["authorisation"] == true){
+      req.body.user = response["data"]["user"];
+
+      return next();
+    }else{
+      res.status(500).send('Authentication fail')
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
 }
 
 let authEncryptHash = async function(apiSecret, data) {
@@ -69,6 +73,9 @@ let authDecryptCheck = async function(apiSecret, data) {
       console.log("hash: " + hash)
 
       let match = await checkSignatureAndHash(hash, signature, userApiKey)
+
+      console.log("match: " + match)
+
       resolve(match)
     }else{
       resolve(false)
@@ -103,6 +110,8 @@ let authParseData = async function(data) {
     let tempData = JSON.parse(JSON.stringify(data));
 
     delete tempData.signature;
+
+    delete tempData.user;
 
     // Convert object to string
     let rawData = String(JSON.stringify(tempData));

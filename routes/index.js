@@ -45,6 +45,7 @@ router.post('/authorisation/', asyncHandler(async (req, res, next) => {
 
   let access = await auth.authDecryptCheck(apiSecret, data);
 
+  console.log("access", access);
   // use API secret to see if can get the same signature as that passed in
 
   return res.json({
