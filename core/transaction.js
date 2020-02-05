@@ -43,6 +43,25 @@ let generateApiKeyHash = async function(apiKey) {
   return promise;
 }
 
+
+let getAccountFromDB = async function() {
+  var promise = new Promise(function(resolve, reject){
+    let query = 'SELECT id, date, user, email, api_key_prefix, api_key_postfix FROM `' + 'api_keys' + '`;'
+
+    db.query(query, (err, result) => {
+        if (err) {
+            // return result.status(500).send(err);
+            resolve("fail");
+        }
+
+        console.log(result)
+
+        resolve(result);
+    });
+  });
+  return promise;
+}
+
 let addAccountToDB = async function(user, email, apiKeyPrefix, apiKeyPostfix, apiKeyHash, apiSecret, permission) {
   var promise = new Promise(function(resolve, reject){
     let query = 'INSERT INTO `' + 'api_keys' + '` (user, email, api_key_prefix, api_key_postfix, api_key_hash, api_secret, permission) VALUES("' + user +'", "' + email +'", "' + apiKeyPrefix +'", "' + apiKeyPostfix +'", "' + apiKeyHash +'", "' + apiSecret +'", "' + permission +'");'
@@ -97,4 +116,5 @@ exports.generateApiKey = generateApiKey;
 exports.generateApiSecret = generateApiSecret;
 exports.generateApiKeyHash = generateApiKeyHash;
 exports.addAccountToDB = addAccountToDB;
+exports.getAccountFromDB = getAccountFromDB;
 exports.retrieveApiSecretAndUser = retrieveApiSecretAndUser;

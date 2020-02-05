@@ -23,6 +23,7 @@ let isAuthorised = async function(req, res, next) {
     console.log("response", response["data"])
     if(response["data"]["authorisation"] == true){
       req.body.user = response["data"]["user"];
+      req.body.user_id = response["data"]["user_id"];
 
       return next();
     }else{

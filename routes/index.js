@@ -50,7 +50,8 @@ router.post('/authorisation/', asyncHandler(async (req, res, next) => {
 
   return res.json({
     "authorisation": access,
-    "user": apiUser
+    "user": apiUser,
+    "user_id": apiUser
   });
 }));
 
@@ -76,6 +77,14 @@ router.post('/account/', asyncHandler(async (req, res, next) => {
   return res.json({
     "api_key": apiKey,
     "api_secret": apiSecret,
+    "result": result
+  });
+}));
+
+router.get('/account/', asyncHandler(async (req, res, next) => {
+  let result = await tx.getAccountFromDB();
+
+  return res.json({
     "result": result
   });
 }));
