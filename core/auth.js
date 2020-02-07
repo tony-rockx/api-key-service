@@ -27,7 +27,10 @@ let isAuthorised = async function(req, res, next) {
 
       return next();
     }else{
-      res.status(500).send('Authentication fail')
+      return res.json({
+        "status": 500,
+        "message": "Authentication fail"
+      });
     }
   })
   .catch(function (error) {
