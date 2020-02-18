@@ -39,6 +39,7 @@ router.post('/authorisation/', asyncHandler(async (req, res, next) => {
   let apiSecretAndUser = await tx.retrieveApiSecretAndUser(apiKey, apiKeyHash);
   let apiSecret = apiSecretAndUser[0];
   let apiUser = apiSecretAndUser[1];
+  let apiUserId = apiSecretAndUser[2];
 
   console.log("apiSecret", apiSecret);
   console.log("apiUser", apiUser);
@@ -51,7 +52,7 @@ router.post('/authorisation/', asyncHandler(async (req, res, next) => {
   return res.json({
     "authorisation": access,
     "user": apiUser,
-    "user_id": apiUser
+    "user_id": apiUserId
   });
 }));
 
