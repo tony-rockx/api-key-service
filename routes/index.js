@@ -29,31 +29,39 @@ router.get('/test', (req, res) => {
 router.post('/authorisation/', asyncHandler(async (req, res, next) => {
   var apiKey = req.body.api_key;
   var data = req.body;
+  var signature = req.body.signature;
 
-  console.log("data", data);
+  if(signature){
+    console.log("data", data);
 
-  let apiKeyHash = await tx.generateApiKeyHash(apiKey);
+    let apiKeyHash = await tx.generateApiKeyHash(apiKey);
 
-  console.log("apiKeyHash", apiKeyHash);
+    console.log("apiKeyHash", apiKeyHash);
 
-  let apiSecretAndUser = await tx.retrieveApiSecretAndUser(apiKey, apiKeyHash);
-  let apiSecret = apiSecretAndUser[0];
-  let apiUser = apiSecretAndUser[1];
-  let apiUserId = apiSecretAndUser[2];
+    let apiSecretAndUser = await tx.retrieveApiSecretAndUser(apiKey, apiKeyHash);
+    let apiSecret = apiSecretAndUser[0];
+    let apiUser = apiSecretAndUser[1];
+    let apiUserId = apiSecretAndUser[2];
 
-  console.log("apiSecret", apiSecret);
-  console.log("apiUser", apiUser);
+    console.log("apiSecret", apiSecret);
+    console.log("apiUser", apiUser);
 
-  let access = await auth.authDecryptCheck(apiSecret, data);
+    let access = await auth.authDecryptCheck(apiSecret, data);
 
-  console.log("access", access);
-  // use API secret to see if can get the same signature as that passed in
+    console.log("access", access);
+    // use API secret to see if can get the same signature as that passed in
 
-  return res.json({
-    "authorisation": access,
-    "user": apiUser,
-    "user_id": apiUserId
-  });
+    return res.json({
+      "authorisation": access,
+      "user": apiUser,
+      "user_id": apiUserId
+    });
+  }else{
+    return res.json({
+      "status": 400,
+      "message": "no signature found"
+    });
+  }
 }));
 
 
