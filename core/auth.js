@@ -5,40 +5,40 @@ require('dotenv').config()
 
 const config = require('config');
 
-const apiKeyIP = process.env.APIKEY_IP || "http://localhost";
-const apiKeyPort = process.env.APIKEY_PORT || "3888";
-
-let isAuthorised = async function(req, res, next) {
-  let url = apiKeyIP + ":" + apiKeyPort + '/authorisation';
-
-  let data;
-  if(req.method == "GET"){
-    data = req.query;
-  }else{
-    data = req.body;
-  }
-
-  console.log("data",data)
-
-  axios.post(url, data)
-  .then(async function (response) {
-    console.log("response", response["data"])
-    if(response["data"]["authorisation"] == true){
-      req.body.user = response["data"]["user"];
-      req.body.user_id = response["data"]["user_id"];
-
-      return next();
-    }else{
-      return res.json({
-        "status": 500,
-        "message": "Authentication fail"
-      });
-    }
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-}
+// const apiKeyIP = process.env.APIKEY_IP || config.get('apikey-ip'); // "http://localhost";
+// const apiKeyPort = process.env.APIKEY_PORT || config.get('apikey-port'); // "3888";
+//
+// let isAuthorised = async function(req, res, next) {
+//   let url = apiKeyIP + ":" + apiKeyPort + '/authorisation';
+//
+//   let data;
+//   if(req.method == "GET"){
+//     data = req.query;
+//   }else{
+//     data = req.body;
+//   }
+//
+//   console.log("data",data)
+//
+//   axios.post(url, data)
+//   .then(async function (response) {
+//     console.log("response", response["data"])
+//     if(response["data"]["authorisation"] == true){
+//       req.body.user = response["data"]["user"];
+//       req.body.user_id = response["data"]["user_id"];
+//
+//       return next();
+//     }else{
+//       return res.json({
+//         "status": 500,
+//         "message": "Authentication fail"
+//       });
+//     }
+//   })
+//   .catch(function (error) {
+//     console.log(error);
+//   });
+// }
 
 let authEncryptHash = async function(apiSecret, data) {
   var promise = new Promise(async function(resolve, reject){

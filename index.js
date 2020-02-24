@@ -5,8 +5,10 @@ const bodyParser = require('body-parser');
 
 require('dotenv').config()
 
+const config = require('config');
+
 const app = express()
-const port = process.env.PORT || 3000
+const port = process.env.PORT || config.get('port'); // 3000
 
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
