@@ -3,6 +3,8 @@ const axios = require('axios');
 
 require('dotenv').config()
 
+const config = require('config');
+
 const apiKeyIP = process.env.APIKEY_IP || "http://localhost";
 const apiKeyPort = process.env.APIKEY_PORT || "3888";
 

@@ -3,8 +3,6 @@ var router = express.Router()
 
 const axios = require('axios');
 
-//require('dotenv').config()
-
 var auth = require('../core/auth.js');
 var tx = require('../core/transaction.js');
 
@@ -72,7 +70,7 @@ router.post('/account/', asyncHandler(async (req, res, next) => {
   let countResult = await tx.retrieveCountFromDB(email);
   let count  = countResult[0]["COUNT(*)"];
   console.log("current api keys count is", count);
-  
+
   if (count >= 5) {
     return res.json({
       "status": 400,
