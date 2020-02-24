@@ -7,7 +7,6 @@ create table api_keys (id int(50) not null auto_increment primary key, `date` TI
 
 INSERT INTO api_keys (user, email, api_key_prefix, api_key_postfix, api_key_hash, api_secret, permission) VALUES("tony", "tony@rock.com", "123", "123", "321berbrebeberbebebeberrebrrb", "123", "low");
 
-
 SELECT * FROM api_keys;
 
 

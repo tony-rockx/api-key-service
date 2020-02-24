@@ -78,6 +78,21 @@ let addAccountToDB = async function(user, email, apiKeyPrefix, apiKeyPostfix, ap
   return promise;
 }
 
+let retrieveCountFromDB = async function(email) {
+  var promise = new Promise(function(resolve, reject) {
+    //let query = 'SELECT email, count FROM `' + 'api_keys_count' + '`;'
+    let query = 'SELECT COUNT(*) FROM `' + 'api_keys' + '` WHERE `email`="' + email +'";'
+    //SELECT COUNT(*) FROM api_keys WHERE email = 'xiaomeng@rockx.com';
+    db.query(query, (err, result) => {
+      if(err) {
+        resolve("fail");
+      }
+      //console.log(result);
+      resolve(result);
+    });
+  });
+  return promise;
+}
 
 let retrieveApiSecretAndUser = async function(apiKey, apiKeyHash) {
 
@@ -118,4 +133,5 @@ exports.generateApiSecret = generateApiSecret;
 exports.generateApiKeyHash = generateApiKeyHash;
 exports.addAccountToDB = addAccountToDB;
 exports.getAccountFromDB = getAccountFromDB;
+exports.retrieveCountFromDB = retrieveCountFromDB;
 exports.retrieveApiSecretAndUser = retrieveApiSecretAndUser;

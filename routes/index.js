@@ -69,6 +69,17 @@ router.post('/account/', asyncHandler(async (req, res, next) => {
   var user = req.body.user;
   var email = req.body.email;
 
+  let countResult = await tx.retrieveCountFromDB(email);
+  let count  = countResult[0]["COUNT(*)"];
+  console.log("current api keys count is", count);
+  
+  if (count >= 5) {
+    return res.json({
+      "status": 400,
+      "message": "can't set more than 5 api keys"
+    });
+  }
+
   let apiKey = await tx.generateApiKey();
   let apiSecret = await tx.generateApiSecret();
 
