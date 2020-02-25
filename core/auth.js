@@ -119,20 +119,16 @@ let authParseData = async function(data) {
 
     delete tempData.user;
 
-    // Convert object to string
-    let rawData = String(JSON.stringify(tempData));
+    let objKey = Object.keys(tempData);
+    let objVal = Object.values(tempData);
 
-    // Remove quotation
-    rawData = rawData.replace(/\"/g, "");
+    let param = [];
 
-    // Remove {}
-    rawData = rawData.substring(1, rawData.length - 1);
-
-    // Convert : to =
-    rawData = rawData.replace(/:/g, '=');
-
-    // Split entries into array
-    let param = rawData.split(",");
+    for(var i=0; i<objKey.length; i++){
+      param.push(objKey[i] + "=" + objVal[i]);
+    }
+    
+    console.log("param",param);
 
     resolve(param)
   });
@@ -180,7 +176,7 @@ let authGenerateHash = async function(apiSecret, string) {
   return promise;
 }
 
-exports.isAuthorised = isAuthorised;
+// exports.isAuthorised = isAuthorised;
 exports.authEncryptHash = authEncryptHash;
 exports.authDecryptCheck = authDecryptCheck;
 exports.authParseData = authParseData;
