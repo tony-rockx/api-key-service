@@ -62,9 +62,9 @@ let getAccountFromDB = async function() {
   return promise;
 }
 
-let addAccountToDB = async function(user, email, apiKeyPrefix, apiKeyPostfix, apiKeyHash, apiSecret, permission) {
+let addAccountToDB = async function(user, email, apiKeyPrefix, apiKeyPostfix, apiKeyHash, apiSecret) {
   var promise = new Promise(function(resolve, reject){
-    let query = 'INSERT INTO `' + 'api_keys' + '` (user, email, api_key_prefix, api_key_postfix, api_key_hash, api_secret, permission) VALUES("' + user +'", "' + email +'", "' + apiKeyPrefix +'", "' + apiKeyPostfix +'", "' + apiKeyHash +'", "' + apiSecret +'", "' + permission +'");'
+    let query = 'INSERT INTO `' + 'api_keys' + '` (user, email, api_key_prefix, api_key_postfix, api_key_hash, api_secret, permission_wallet, permission_coin, permission_feature, permission_network, admin_rights) VALUES("' + user +'", "' + email +'", "' + apiKeyPrefix +'", "' + apiKeyPostfix +'", "' + apiKeyHash +'", "' + apiSecret +'", "", "", "", "", false);'
 
     db.query(query, (err, result) => {
         if (err) {
@@ -113,7 +113,7 @@ let retrieveApiSecretAndUser = async function(apiKey, apiKeyHash) {
             console.log(result[0]["id"]);
             console.log(result[0]["api_secret"]);
             console.log(result[0]["user"]);
-            resolve([result[0]["api_secret"], result[0]["user"], result[0]["id"], result[0]["email"], result[0]["permission_wallet"], result[0]["permission_coin"], result[0]["permission_feature"], result[0]["permission_network"]]);
+            resolve([result[0]["api_secret"], result[0]["user"], result[0]["id"], result[0]["email"], result[0]["permission_wallet"], result[0]["permission_coin"], result[0]["permission_feature"], result[0]["permission_network"], result[0]["admin_rights"]]);
           }else{
             resolve("fail");
           }
@@ -127,6 +127,22 @@ let retrieveApiSecretAndUser = async function(apiKey, apiKeyHash) {
 }
 
 
+let deleteKey = async function(user, email, apiKeyHash) {
+  var promise = new Promise(function(resolve, reject){
+    let query = 'DELETE FROM `' + 'api_keys' + '` WHERE user="' + user +'" AND api_key_hash="' + apiKeyHash +'" AND email="' + email +'";'
+
+    db.query(query, (err, result) => {
+        if (err) {
+            // return result.status(500).send(err);
+            resolve("fail");
+        }
+
+        console.log(result);
+        resolve(result);
+    });
+  });
+  return promise;
+}
 
 exports.generateApiKey = generateApiKey;
 exports.generateApiSecret = generateApiSecret;
@@ -135,3 +151,4 @@ exports.addAccountToDB = addAccountToDB;
 exports.getAccountFromDB = getAccountFromDB;
 exports.retrieveCountFromDB = retrieveCountFromDB;
 exports.retrieveApiSecretAndUser = retrieveApiSecretAndUser;
+exports.deleteKey = deleteKey;
