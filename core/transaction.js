@@ -113,7 +113,7 @@ let retrieveApiSecretAndUser = async function(apiKey, apiKeyHash) {
             console.log(result[0]["id"]);
             console.log(result[0]["api_secret"]);
             console.log(result[0]["user"]);
-            resolve([result[0]["api_secret"], result[0]["user"], result[0]["id"]]);
+            resolve([result[0]["api_secret"], result[0]["user"], result[0]["id"], result[0]["email"], result[0]["permission_wallet"], result[0]["permission_coin"], result[0]["permission_feature"], result[0]["permission_network"]]);
           }else{
             resolve("fail");
           }

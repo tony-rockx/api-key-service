@@ -40,6 +40,11 @@ router.post('/authorisation/', asyncHandler(async (req, res, next) => {
     let apiSecret = apiSecretAndUser[0];
     let apiUser = apiSecretAndUser[1];
     let apiUserId = apiSecretAndUser[2];
+    let email = apiSecretAndUser[3];
+    let permissionWallet = apiSecretAndUser[4];
+    let permissionCoin = apiSecretAndUser[5];
+    let permissionFeature = apiSecretAndUser[6];
+    let permissionNetwork = apiSecretAndUser[7];
 
     console.log("apiSecret", apiSecret);
     console.log("apiUser", apiUser);
@@ -52,7 +57,12 @@ router.post('/authorisation/', asyncHandler(async (req, res, next) => {
     return res.json({
       "authorisation": access,
       "user": apiUser,
-      "user_id": apiUserId
+      "user_id": apiUserId,
+      "email": email,
+      "permission_wallet": permissionWallet,
+      "permission_coin": permissionCoin,
+      "permission_feature": permissionFeature,
+      "permission_network": permissionNetwork
     });
   }else{
     return res.json({
@@ -62,7 +72,7 @@ router.post('/authorisation/', asyncHandler(async (req, res, next) => {
   }
 }));
 
-
+// MAY need some authentication at some point
 router.post('/account/', asyncHandler(async (req, res, next) => {
   var user = req.body.user;
   var email = req.body.email;
@@ -99,6 +109,7 @@ router.post('/account/', asyncHandler(async (req, res, next) => {
   });
 }));
 
+// MUST need some authentication at some point
 router.get('/account/', asyncHandler(async (req, res, next) => {
   let result = await tx.getAccountFromDB();
 
