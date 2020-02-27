@@ -75,53 +75,33 @@ router.post('/authorisation/', asyncHandler(async (req, res, next) => {
   }
 }));
 
-// router.post('/permission/', asyncHandler(async (req, res, next) => {
-//   var apiKey = req.body.api_key;
-//   var data = req.body;
-//   var signature = req.body.signature;
+router.post('/permission/', asyncHandler(async (req, res, next) => {
+  var apiKey = req.body.api_key;
+  var permissionType = req.body.permission_type;
+  var permissionData = req.body.permission_data;
+  var data = req.body;
+  var signature = req.body.signature;
 //
 //   if(signature){
 //     console.log("data", data);
 //
-//     let apiKeyHash = await tx.generateApiKeyHash(apiKey);
-//
-//     console.log("apiKeyHash", apiKeyHash);
-//
-//     let apiSecretAndUser = await tx.retrieveApiSecretAndUser(apiKey, apiKeyHash);
-//     let apiSecret = apiSecretAndUser[0];
-//     let apiUser = apiSecretAndUser[1];
-//     let apiUserId = apiSecretAndUser[2];
-//     let email = apiSecretAndUser[3];
-//     let permissionWallet = apiSecretAndUser[4];
-//     let permissionCoin = apiSecretAndUser[5];
-//     let permissionFeature = apiSecretAndUser[6];
-//     let permissionNetwork = apiSecretAndUser[7];
-//
-//     console.log("apiSecret", apiSecret);
-//     console.log("apiUser", apiUser);
-//
-//     let access = await auth.authDecryptCheck(apiSecret, data);
-//
-//     console.log("access", access);
-//     // use API secret to see if can get the same signature as that passed in
-//
-//     return res.json({
-//       "authorisation": access,
-//       "user": apiUser,
-//       "user_id": apiUserId,
-//       "email": email,
-//       "permission_wallet": permissionWallet,
-//       "permission_coin": permissionCoin,
-//       "permission_feature": permissionFeature,
-//       "permission_network": permissionNetwork
-//     });
+    let apiKeyHash = await tx.generateApiKeyHash(apiKey);
+
+    console.log("apiKeyHash", apiKeyHash);
+
+    let result = await tx.updatePermission(apiKeyHash, permissionType, permissionData);
+
+    return res.json({
+      "status": 200,
+      "message": "permission updated"
+    });
 //   }else{
 //     return res.json({
 //       "status": 400,
 //       "message": "no signature found"
 //     });
 //   }
-// }));
+}));
 
 // MAY need some authentication at some point
 router.post('/account/', asyncHandler(async (req, res, next) => {

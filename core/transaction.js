@@ -144,6 +144,35 @@ let deleteKey = async function(user, email, apiKeyHash) {
   return promise;
 }
 
+
+let updatePermission = async function(apiKeyHash, permissionType, permissionData) {
+  let columnName = ""
+  if(permissionType == "wallet"){
+    columnName = "permission_wallet";
+  }else if(permissionType == "coin"){
+    columnName = "permission_coin";
+  }else if(permissionType == "feature"){
+    columnName = "permission_feature";
+  }else if(permissionType == "network"){
+    columnName = "permission_network";
+  }
+  var promise = new Promise(function(resolve, reject){
+    let query = "UPDATE `" + 'api_keys' + "` SET `" + columnName + "` = '" + permissionData + "' WHERE `api_key_hash` = '" + apiKeyHash + "'";
+    // UPDATE `api_keys` SET `permission_coin` = 'btc,eth,atom,iotex' WHERE `api_key_hash`='db865b194493bdaad45db03a1db705ac6c2ab8319314ecc65e9c8a4381ebe578';
+
+    db.query(query, (err, result) => {
+        if (err) {
+            // return result.status(500).send(err);
+            resolve("fail");
+        }
+
+        console.log(result);
+        resolve(result);
+    });
+  });
+  return promise;
+}
+
 exports.generateApiKey = generateApiKey;
 exports.generateApiSecret = generateApiSecret;
 exports.generateApiKeyHash = generateApiKeyHash;
@@ -152,3 +181,4 @@ exports.getAccountFromDB = getAccountFromDB;
 exports.retrieveCountFromDB = retrieveCountFromDB;
 exports.retrieveApiSecretAndUser = retrieveApiSecretAndUser;
 exports.deleteKey = deleteKey;
+exports.updatePermission = updatePermission;
