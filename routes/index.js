@@ -13,7 +13,10 @@ const asyncHandler = fn => (req, res, next) =>
 
 
 router.get('/test', (req, res) => {
-  return res.send('test');
+  return res.json({
+    "status": 200,
+    "data": "test"
+  });
 });
 
 // create key
