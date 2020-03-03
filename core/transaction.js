@@ -62,9 +62,9 @@ let getAccountFromDB = async function() {
   return promise;
 }
 
-let addAccountToDB = async function(user, email, apiKeyPrefix, apiKeyPostfix, apiKeyHash, apiSecret) {
+let addAccountToDB = async function(user, email, apiKeyPrefix, apiKeyPostfix, apiKeyHash, apiSecret, epoch) {
   var promise = new Promise(function(resolve, reject){
-    let query = 'INSERT INTO `' + 'api_keys' + '` (user, email, api_key_prefix, api_key_postfix, api_key_hash, api_secret, permission_wallet, permission_coin, permission_feature, permission_network, admin_rights) VALUES("' + user +'", "' + email +'", "' + apiKeyPrefix +'", "' + apiKeyPostfix +'", "' + apiKeyHash +'", "' + apiSecret +'", "", "", "", "", false);'
+    let query = 'INSERT INTO `' + 'api_keys' + '` (user, email, api_key_prefix, api_key_postfix, api_key_hash, api_secret, permission_wallet, permission_coin, permission_feature, permission_network, admin_rights, expiration_epoch) VALUES("' + user +'", "' + email +'", "' + apiKeyPrefix +'", "' + apiKeyPostfix +'", "' + apiKeyHash +'", "' + apiSecret +'", "", "", "", "", false, "' + epoch +'");'
 
     db.query(query, (err, result) => {
         if (err) {
@@ -113,7 +113,7 @@ let retrieveApiSecretAndUser = async function(apiKey, apiKeyHash) {
             console.log(result[0]["id"]);
             console.log(result[0]["api_secret"]);
             console.log(result[0]["user"]);
-            resolve([result[0]["api_secret"], result[0]["user"], result[0]["id"], result[0]["email"], result[0]["permission_wallet"], result[0]["permission_coin"], result[0]["permission_feature"], result[0]["permission_network"], result[0]["admin_rights"]]);
+            resolve([result[0]["api_secret"], result[0]["user"], result[0]["id"], result[0]["email"], result[0]["permission_wallet"], result[0]["permission_coin"], result[0]["permission_feature"], result[0]["permission_network"], result[0]["admin_rights"], result[0]["expiration_epoch"]]);
           }else{
             resolve("fail");
           }

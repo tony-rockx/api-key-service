@@ -2,6 +2,7 @@ var express = require('express')
 var router = express.Router()
 
 const axios = require('axios');
+var moment = require('moment');
 
 var auth = require('../core/auth.js');
 var tx = require('../core/transaction.js');
@@ -32,6 +33,9 @@ router.post('/authorisation/', asyncHandler(async (req, res, next) => {
   var data = req.body;
   var signature = req.body.signature;
 
+  var currentEpoch = moment().valueOf();
+  console.log("currentEpoch", currentEpoch);
+
   // signature not being used to authentication?
   if(signature){
     console.log("data", data);
@@ -50,26 +54,36 @@ router.post('/authorisation/', asyncHandler(async (req, res, next) => {
     let permissionFeature = apiSecretAndUser[6];
     let permissionNetwork = apiSecretAndUser[7];
     let adminRights = apiSecretAndUser[8];
+    let expirationEpoch = apiSecretAndUser[9];
+    console.log("apiSecretAndUser", apiSecretAndUser);
+    console.log("expirationEpoch", expirationEpoch);
 
-    console.log("apiSecret", apiSecret);
-    console.log("apiUser", apiUser);
+    if(expirationEpoch > currentEpoch){
+      console.log("apiSecret", apiSecret);
+      console.log("apiUser", apiUser);
 
-    let access = await auth.authDecryptCheck(apiSecret, data);
+      let access = await auth.authDecryptCheck(apiSecret, data);
 
-    console.log("access", access);
-    // use API secret to see if can get the same signature as that passed in
+      console.log("access", access);
+      // use API secret to see if can get the same signature as that passed in
 
-    return res.json({
-      "authorisation": access,
-      "user": apiUser,
-      "user_id": apiUserId,
-      "email": email,
-      "permission_wallet": permissionWallet,
-      "permission_coin": permissionCoin,
-      "permission_feature": permissionFeature,
-      "permission_network": permissionNetwork,
-      "admin_rights": adminRights
-    });
+      return res.json({
+        "authorisation": access,
+        "user": apiUser,
+        "user_id": apiUserId,
+        "email": email,
+        "permission_wallet": permissionWallet,
+        "permission_coin": permissionCoin,
+        "permission_feature": permissionFeature,
+        "permission_network": permissionNetwork,
+        "admin_rights": adminRights
+      });
+    }else{
+      return res.json({
+        "status": 400,
+        "message": "api key expired"
+      });
+    }
   }else{
     return res.json({
       "status": 400,
@@ -111,6 +125,11 @@ router.post('/account/', asyncHandler(async (req, res, next) => {
   var user = req.body.user;
   var email = req.body.email;
 
+  var currentEpoch = moment().valueOf();
+  console.log("currentEpoch", currentEpoch);
+
+  var expirationEpoch = currentEpoch + (2629743000 * 3); // 3 month
+
   let countResult = await tx.retrieveCountFromDB(email);
   let count  = countResult[0]["COUNT(*)"];
   console.log("current api keys count is", count);
@@ -134,7 +153,7 @@ router.post('/account/', asyncHandler(async (req, res, next) => {
 
   console.log(apiKeyHash);
 
-  let result = await tx.addAccountToDB(user, email, apiKeyPrefix, apiKeyPostfix, apiKeyHash, apiSecret);
+  let result = await tx.addAccountToDB(user, email, apiKeyPrefix, apiKeyPostfix, apiKeyHash, apiSecret, expirationEpoch);
 
   return res.json({
     "api_key": apiKey,
