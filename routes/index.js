@@ -124,11 +124,21 @@ router.post('/permission/', asyncHandler(async (req, res, next) => {
 router.post('/account/', asyncHandler(async (req, res, next) => {
   var user = req.body.user;
   var email = req.body.email;
+  var expiration = req.body.expiration || "week";
 
   var currentEpoch = moment().valueOf();
   console.log("currentEpoch", currentEpoch);
 
-  var expirationEpoch = currentEpoch + (2629743000 * 3); // 3 month
+  let expirationTime = 604800;
+  if(expiration == "week"){
+    expirationTime = 604800;
+  }else if(expiration == "month"){
+    expirationTime = 2629743000;
+  }else if(expiration == "quarter"){
+    expirationTime = 2629743000 * 3;
+  }
+
+  var expirationEpoch = currentEpoch + expirationTime; // 3 month
 
   let countResult = await tx.retrieveCountFromDB(email);
   let count  = countResult[0]["COUNT(*)"];
