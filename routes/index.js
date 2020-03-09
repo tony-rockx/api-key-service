@@ -173,45 +173,50 @@ router.post('/account/', asyncHandler(async (req, res, next) => {
 }));
 
 // since user might have multiple keys, the permission level will be based on the keys used (that match with signature). It can however delete key under the same user & email (unsafe?)
+
+// there should be 2 ways of deleting keys.
+// normal user can only delete their own key
+// admin user can delete anybody's key
+// * api key or secret shouldn't be needed else there'll be no way to delete key if they lose it
 router.post('/account/delete', asyncHandler(async (req, res, next) => {
   var user = req.body.user;
   var email = req.body.email;
-  var apiKey = req.body.api_key;
+  // var apiKey = req.body.api_key;
 
-  console.log('DELETE /account/', user, email, apiKey);
+  // console.log('DELETE /account/', user, email, apiKey);
 
-  let signature = "temp exist"
+  // let signature = "temp exist"
+  //
+  // if(signature){
+  //   let apiKeyHash = await tx.generateApiKeyHash(apiKey);
+  //
+  //   console.log("apiKeyHash", apiKeyHash);
+  //
+  //   let apiSecretAndUser = await tx.retrieveApiSecretAndUser(apiKey, apiKeyHash);
+  //
+  //   console.log(apiSecretAndUser);
 
-  if(signature){
-    let apiKeyHash = await tx.generateApiKeyHash(apiKey);
+    // if(apiSecretAndUser !== "fail"){
 
-    console.log("apiKeyHash", apiKeyHash);
+  let result = await tx.deleteKey(user, email);
 
-    let apiSecretAndUser = await tx.retrieveApiSecretAndUser(apiKey, apiKeyHash);
-
-    console.log(apiSecretAndUser);
-
-    if(apiSecretAndUser !== "fail"){
-
-      let result = await tx.deleteKey(user, email, apiKeyHash);
-
-      return res.json({
-        "status": 200,
-        "message": "api key deleted"
-      });
-    }else{
-    return res.json({
-      "status": 204,
-      "message": "access restricted"
-    });
-    }
-
-  }else{
-    return res.json({
-      "status": 400,
-      "message": "no signature found"
-    });
-  }
+  return res.json({
+    "status": 200,
+    "message": "api key deleted"
+  });
+  //   }else{
+  //     return res.json({
+  //       "status": 204,
+  //       "message": "access restricted"
+  //     });
+  //   }
+  //
+  // }else{
+  //   return res.json({
+  //     "status": 400,
+  //     "message": "no signature found"
+  //   });
+  // }
 }));
 
 // MUST need some authentication at some point

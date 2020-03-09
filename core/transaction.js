@@ -46,7 +46,7 @@ let generateApiKeyHash = async function(apiKey) {
 
 let getAccountFromDB = async function() {
   var promise = new Promise(function(resolve, reject){
-    let query = 'SELECT id, date, user, email, api_key_prefix, api_key_postfix FROM `' + 'api_keys' + '`;'
+    let query = 'SELECT id, date, user, email, api_key_prefix, api_key_postfix, expiration_epoch FROM `' + 'api_keys' + '`;'
 
     db.query(query, (err, result) => {
         if (err) {
@@ -127,9 +127,9 @@ let retrieveApiSecretAndUser = async function(apiKey, apiKeyHash) {
 }
 
 
-let deleteKey = async function(user, email, apiKeyHash) {
+let deleteKey = async function(user, email) {
   var promise = new Promise(function(resolve, reject){
-    let query = 'DELETE FROM `' + 'api_keys' + '` WHERE user="' + user +'" AND api_key_hash="' + apiKeyHash +'" AND email="' + email +'";'
+    let query = 'DELETE FROM `' + 'api_keys' + '` WHERE user="' + user +'" AND email="' + email +'";'
 
     db.query(query, (err, result) => {
         if (err) {
