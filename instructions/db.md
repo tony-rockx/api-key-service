@@ -13,10 +13,17 @@ SELECT * FROM api_keys;
 SELECT * FROM api_keys WHERE api_key_prefix="20c6b" AND api_key_postfix="d1311";
 
 ALTER TABLE api_keys ADD COLUMN permission_wallet varchar(1000);
+
 ALTER TABLE api_keys ADD COLUMN permission_coin varchar(1000);
+
 ALTER TABLE api_keys ADD COLUMN permission_feature varchar(1000);
+
 ALTER TABLE api_keys ADD COLUMN permission_network varchar(1000);
+
 ALTER TABLE api_keys ADD COLUMN expiration_epoch varchar(1000);
+
 ALTER TABLE api_keys ADD COLUMN admin_rights boolean;
 
 ALTER TABLE api_keys DROP permission;
+
+UPDATE `api_keys` SET `expiration_epoch` = '9583214241348' WHERE `id`=‘8’;
