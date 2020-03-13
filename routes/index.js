@@ -131,7 +131,7 @@ router.post('/account/', asyncHandler(async (req, res, next) => {
 
   let expirationTime = 604800;
   if(expiration == "week"){
-    expirationTime = 604800;
+    expirationTime = 604800000;
   }else if(expiration == "month"){
     expirationTime = 2629743000;
   }else if(expiration == "quarter"){

@@ -17,3 +17,6 @@ ALTER TABLE api_keys ADD COLUMN permission_coin varchar(1000);
 ALTER TABLE api_keys ADD COLUMN permission_feature varchar(1000);
 ALTER TABLE api_keys ADD COLUMN permission_network varchar(1000);
 ALTER TABLE api_keys ADD COLUMN expiration_epoch varchar(1000);
+ALTER TABLE api_keys ADD COLUMN admin_rights boolean;
+
+ALTER TABLE api_keys DROP permission;
