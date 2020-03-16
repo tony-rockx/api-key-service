@@ -125,6 +125,10 @@ router.post('/account/', asyncHandler(async (req, res, next) => {
   var user = req.body.user;
   var email = req.body.email;
   var expiration = req.body.expiration || "week";
+  var permissionFeature = req.body.permission_feature || "";
+  var permissionCoin = req.body.permission_coin || "";
+  var permissionWallet = req.body.permission_wallet || "";
+  var permissionNetwork = req.body.permission_network || "";
 
   var currentEpoch = moment().valueOf();
   console.log("currentEpoch", currentEpoch);
@@ -163,7 +167,7 @@ router.post('/account/', asyncHandler(async (req, res, next) => {
 
   console.log(apiKeyHash);
 
-  let result = await tx.addAccountToDB(user, email, apiKeyPrefix, apiKeyPostfix, apiKeyHash, apiSecret, expirationEpoch);
+  let result = await tx.addAccountToDB(user, email, apiKeyPrefix, apiKeyPostfix, apiKeyHash, apiSecret, expirationEpoch, permissionFeature, permissionCoin, permissionWallet, permissionNetwork);
 
   return res.json({
     "api_key": apiKey,

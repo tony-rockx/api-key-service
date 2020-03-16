@@ -62,9 +62,9 @@ let getAccountFromDB = async function() {
   return promise;
 }
 
-let addAccountToDB = async function(user, email, apiKeyPrefix, apiKeyPostfix, apiKeyHash, apiSecret, epoch) {
+let addAccountToDB = async function(user, email, apiKeyPrefix, apiKeyPostfix, apiKeyHash, apiSecret, epoch, permissionFeature, permissionCoin, permissionWallet, permissionNetwork) {
   var promise = new Promise(function(resolve, reject){
-    let query = 'INSERT INTO `' + 'api_keys' + '` (user, email, api_key_prefix, api_key_postfix, api_key_hash, api_secret, permission_wallet, permission_coin, permission_feature, permission_network, admin_rights, expiration_epoch) VALUES("' + user +'", "' + email +'", "' + apiKeyPrefix +'", "' + apiKeyPostfix +'", "' + apiKeyHash +'", "' + apiSecret +'", "", "", "", "", false, "' + epoch +'");'
+    let query = 'INSERT INTO `' + 'api_keys' + '` (user, email, api_key_prefix, api_key_postfix, api_key_hash, api_secret, permission_wallet, permission_coin, permission_feature, permission_network, admin_rights, expiration_epoch) VALUES("' + user +'", "' + email +'", "' + apiKeyPrefix +'", "' + apiKeyPostfix +'", "' + apiKeyHash +'", "' + apiSecret +'", "' + permissionWallet +'", "' + permissionCoin +'", "' + permissionFeature +'", "' + permissionNetwork +'", false, "' + epoch +'");'
 
     db.query(query, (err, result) => {
         if (err) {
